@@ -405,7 +405,7 @@ def view_imageset(request, image_set_id):
     if request.method == "POST" and form_filter is not None:
         filtered = True
         # filter images for missing annotationtype
-        images = images.exclude(
+        images = images.exclude(  #SARAH IT ACTUALLY MIGHT BE HERE
             annotations__annotation_type_id=request.POST.get("selected_annotation_type"))
     # a list of annotation types used in the imageset
     all_annotation_types = AnnotationType.objects.filter(active=True)
@@ -726,7 +726,7 @@ def load_image_set(request) -> Response:
     except (KeyError, TypeError, ValueError):
         raise ParseError
 
-    image_set = get_object_or_404(ImageSet, pk=image_set_id)
+    image_set = get_object_or_404(ImageSet, pk=image_set_id) #gets the whole image set
 
     if not image_set.has_perm('read', request.user):
         return Response({
@@ -735,18 +735,20 @@ def load_image_set(request) -> Response:
 
     serializer = ImageSetSerializer(image_set)
     serialized_image_set = serializer.data
+
+    all_annotation_types = AnnotationType.objects.filter(active=True)
     if filter_annotation_type_id:
         filter_annotation_type = get_object_or_404(
             AnnotationType, pk=filter_annotation_type_id)
         # TODO: find a cleaner solution to filter related field set wihtin ImageSet serializer
         serialized_image_set['images'] = ImageSerializer(
-            image_set.images.exclude(
+            image_set.images.filter(    # SARAH IT'S HERE EXCLUDE TO FILTER
                 annotations__annotation_type=filter_annotation_type).order_by(
                 'name'), many=True).data
     else:
         # TODO: find a cleaner solution to order related field set wihtin ImageSet serializer
         serialized_image_set['images'] = ImageSerializer(
-            image_set.images.order_by('name'), many=True).data
+            image_set.images.filter(annotations__annotation_type=None).order_by('name'), many=True).data
     return Response({
         'image_set': serialized_image_set,
     }, status=HTTP_200_OK)

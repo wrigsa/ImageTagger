@@ -242,6 +242,7 @@
             </div>
             {% endif %}
             {% if userteams %}
+	    {% if user.is_staff %} <!--SARAH--!>
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-default">
@@ -285,7 +286,8 @@
                     </div>
                 </div>
             </div>
-            {% endif %}
+	    {% endif %}<!--SARAH--!>
+	    {% endif %}
             <div class="row">
                 <div class="col-md-12">
                     <div class="panel panel-default">

@@ -958,9 +958,9 @@ function calculateImageScale() {
       success: function(data, textStatus, jqXHR) {
         if (data.image_set.images.length === 0) {
           // redirect to image set view.
-          displayFeedback($('#feedback_image_set_empty'));
-          filterElem.val('').change();
-          return;
+           displayFeedback($('#feedback_image_set_empty'));
+          // filterElem.val('').change();
+          //return;
         }
         displayImageList(data.image_set.images);
       },
